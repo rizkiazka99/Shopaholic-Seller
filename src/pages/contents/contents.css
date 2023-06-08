@@ -1,0 +1,81 @@
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.header-item:nth-child(1) {
+    width: 28%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-item:nth-child(2) {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.content-btn {
+    min-width: 37%;
+    max-width: 37%;
+    min-height: 48px;
+    max-height: 48px;
+}
+
+.products-section .card {
+    width: 18rem;
+    padding: 8px;
+    margin: 8px;
+}
+
+.products-section {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-left: 40px;
+}
+
+.card-title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.category-section {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.category-item:nth-child(1) {
+    width: 40%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.category-item:nth-child(2) {
+    width: 70%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.category {
+    width: 60%;
+    border-radius: 15px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+    background-color: yellowgreen;
+}
+
+.text-white {
+    font-weight: bold;
+}

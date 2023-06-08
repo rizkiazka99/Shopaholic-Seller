@@ -1,0 +1,33 @@
+.App {
+  text-align: center;
+}
+
+.container-main {
+  width: 100%;
+  flex-direction: column;
+}
+
+.main-color {
+  background-color: yellowgreen !important;
+}
+
+.heading {
+  color: yellowgreen;
+}
+
+.sized-box-small {
+  padding-top: 8px;
+  padding-bottom: 0px;
+}
+
+.sized-box-medium {
+  padding: 8px;
+}
+
+.text-btn {
+  color: yellowgreen;
+}
+
+.text-btn:hover {
+  color: black
+}
