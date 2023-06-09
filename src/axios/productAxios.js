@@ -152,7 +152,7 @@ const updateProduct = async (id, product) => {
     }
 }
 
-const deleteProduct = async (id) => {
+const deleteProduct = async (id, cb) => {
     Swal.fire({
         title: 'Hold up!',
         text: 'Are you sure you want to delete this product?',
@@ -165,6 +165,7 @@ const deleteProduct = async (id) => {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
+                cb(true);
                 let deleteProduct = await axios({
                     method: 'DELETE',
                     url: baseUrl + endpoint + `/delete/${id}`,
@@ -181,6 +182,7 @@ const deleteProduct = async (id) => {
                     cancelButtonColor: swalCancelButtonColor
                 }).then(async (result) => {
                     if (result.isConfirmed) {
+                        cb(false)
                         window.location.reload();
                     }
                 });
