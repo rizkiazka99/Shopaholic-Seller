@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { deleteProduct, getSellerProducts, searchProduct } from "../../axios/productAxios";
+import { deleteProduct, getSellerProducts, searchProduct } from "../../axios/productAxios"
+import getCategories from "../../axios/categoryAxios"
 import './contents.css';
-import { EmptyIndicator, EmptySearchResult, LoadingIndicator } from "../../components";
+import { AddProductModal, EmptyIndicator, EmptySearchResult, LoadingIndicator } from "../../components";
 import { MdModeEditOutline, MdDelete, MdVisibility } from 'react-icons/md';
 import { Link } from "react-router-dom";
 
 const ProductsScreen = () => {
     const [loading, setLoading] = useState(false);
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState();
+    let categorySelections = [];
     const [query, setQuery] = useState('');
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
 
     useEffect(() => {
         setLoading(true);
+        getCategories((result) => {
+            setCategories(result);
+            setLoading(false);
+        });
         query.length === 0 
             ? getSellerProducts((result) => {
                 setProducts(result);
@@ -22,6 +31,15 @@ const ProductsScreen = () => {
             });
     }, [ query ]);
 
+    categories?.map((category) => {
+        categorySelections.push({
+            value: category.id,
+            label: category.name
+        });
+
+        return category;
+    });
+
     return(
         <>
             <div className='header'>
@@ -31,16 +49,22 @@ const ProductsScreen = () => {
                 </div>
                 <div className="header-item">
                     <input
+                        onClick={() => setShowAddModal(true)}
                         className='content-btn text-white btn main-color'
                         type='submit'
                         value='+ Add Product'
+                    />
+                    <AddProductModal
+                        show={showAddModal}
+                        onHide={() => setShowAddModal(false)}
+                        categorySelections={categorySelections}
                     />
                 </div>
             </div>
 
             <hr className="mt-0"></hr>
 
-            { products.length !== 0 ? <input 
+            <input 
                 className="form-control mb-2"
                 type="text"
                 placeholder="Search Product"
@@ -50,7 +74,7 @@ const ProductsScreen = () => {
                         ? setQuery(e.target.value)
                         : setQuery('')
                 }}
-            /> : <></> }
+            />
 
             { loading ? <LoadingIndicator></LoadingIndicator>
                     : !loading && query === '' && products.length === 0 ? <EmptyIndicator></EmptyIndicator>
@@ -58,15 +82,15 @@ const ProductsScreen = () => {
                     : !loading && products.length > 0 ? <div className="products-section">
                         {
                             products.map((product) => {
-                                const { id, name, Category, ProductGalleries } = product;
+                                const { id, name, Category, thumbnail } = product;
                                 
                                 return(
                                     <div className='card'>
                                         <div className='card-body'>
                                             <img 
                                                 src={
-                                                    ProductGalleries.length === 0 ? 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'
-                                                        : ProductGalleries[0].name
+                                                    !thumbnail ? 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'
+                                                        : thumbnail
                                                 }
                                                 className="card-img-top"
                                             />
@@ -75,6 +99,9 @@ const ProductsScreen = () => {
                                                     <h6>{name}</h6>
                                                 </div>
                                             </div>
+
+                                            <hr className="mt-0"></hr>
+
                                             <div className="category-section">
                                                 <div className="category-item">
                                                     <Link>

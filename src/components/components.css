@@ -63,3 +63,10 @@
     justify-content: center;
     flex-direction: column;
 }
+
+.modal-btn {
+    min-width: 37%;
+    max-width: 37%;
+    min-height: 48px;
+    max-height: 48px;
+}

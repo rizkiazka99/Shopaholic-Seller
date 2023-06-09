@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { swalCancelButtonColor, swalConfirmButtonColor } from '../helpers/commonVariables';
 
 const endpoint = '/products';
+let isLoading = false;
 
 const getSellerProducts = async (cb) => {
     try {
@@ -23,7 +24,7 @@ const getSellerProducts = async (cb) => {
             title: 'Oops!',
             text: err.response.status !== 500
                 ? err.response.data.message
-                : 'Servor error occurred',
+                : 'Server error occurred',
             confirmButtonColor: swalConfirmButtonColor,
             cancelButtonColor: swalCancelButtonColor
         });
@@ -47,7 +48,79 @@ const searchProduct = async (query, cb) => {
             title: 'Oops!',
             text: err.response.status !== 500
                 ? err.response.data.message
-                : 'Servor error occurred',
+                : 'Server error occurred',
+            confirmButtonColor: swalConfirmButtonColor,
+            cancelButtonColor: swalCancelButtonColor
+        });
+    }
+}
+
+const addProduct = async (product) => {
+    try {
+        isLoading = true;
+
+        await axios({
+            method: 'POST',
+            url: baseUrl + endpoint + '/add',
+            data: product,
+            headers: {
+                access_token: localStorage.getItem('access_token')
+            }
+        }).then((result) => {
+            isLoading = false;
+
+            if (!isLoading) {
+                Swal.fire({
+                    title: 'Yay!',
+                    icon: 'success',
+                    message: 'Successfully added your product',
+                    confirmButtonColor: swalConfirmButtonColor
+                });
+            }
+        });
+    } catch(err) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: err.response.status !== 500
+                ? err.response.data.message
+                : 'Server error occurred',
+            confirmButtonColor: swalConfirmButtonColor,
+            cancelButtonColor: swalCancelButtonColor
+        });
+    }
+}
+
+const updateProduct = async (id, product) => {
+    try {
+        isLoading = true;
+
+        await axios({
+            method: 'PUT',
+            url: baseUrl + endpoint + `/update/${id}`,
+            data: product,
+            headers: {
+                access_token: localStorage.getItem('access_token')
+            }
+        }).then(() => {
+            isLoading = false;
+
+            if (!isLoading) {
+                Swal.fire({
+                    title: 'Yay!',
+                    icon: 'success',
+                    message: 'Successfully updated your product',
+                    confirmButtonColor: swalConfirmButtonColor
+                });
+            }
+        })
+    } catch(err) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: err.response.status !== 500
+                ? err.response.data.message
+                : 'Server error occurred',
             confirmButtonColor: swalConfirmButtonColor,
             cancelButtonColor: swalCancelButtonColor
         });
@@ -92,7 +165,7 @@ const deleteProduct = async (id) => {
                     title: 'Oops!',
                     text: err.response.status !== 500
                         ? err.response.data.message
-                        : 'Servor error occurred',
+                        : 'Server error occurred',
                     confirmButtonColor: swalConfirmButtonColor,
                     cancelButtonColor: swalCancelButtonColor
                 });
@@ -104,5 +177,7 @@ const deleteProduct = async (id) => {
 export { 
     getSellerProducts,
     searchProduct,
+    addProduct,
+    updateProduct,
     deleteProduct
 };

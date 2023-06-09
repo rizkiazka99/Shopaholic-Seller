@@ -4,6 +4,7 @@ import Navbar from "./navbar";
 import LoadingIndicator from "./loadingIndicator";
 import EmptyIndicator from "./emptyIndicator";
 import EmptySearchResult from "./emptySearchResult";
+import AddProductModal from "./addProductModal";
 
 export {
     AuthComponents,
@@ -11,5 +12,6 @@ export {
     Navbar,
     LoadingIndicator,
     EmptyIndicator,
-    EmptySearchResult
+    EmptySearchResult,
+    AddProductModal
 }
