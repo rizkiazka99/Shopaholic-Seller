@@ -242,7 +242,7 @@ const UpdateProductModal = (props) => {
                     </div>
 
                     <div className="container">
-                        { !loading ? <div className="form-floating mb-3">
+                        <div className="form-floating mb-3">
                             <input
                                 onChange={(e) => {
                                     uploadHandler(e.target.files[0]);
@@ -254,7 +254,7 @@ const UpdateProductModal = (props) => {
                                 className="form-control"
                             />
                             <label for="floatingInput">Product Thumbnail - Optional</label>
-                        </div>  : <Skeleton height={34}></Skeleton> }
+                        </div>
                     </div>
                 </Modal.Body>
 
