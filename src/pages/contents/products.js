@@ -41,6 +41,13 @@ const ProductsScreen = () => {
         return category;
     });
 
+    const deleteProductHandler = (id) => {
+        setLoading(true);
+        deleteProduct(id).then(() => {
+            setLoading(false)
+        })
+    }
+
     return(
         <>
             <div className='header'>
@@ -114,7 +121,7 @@ const ProductsScreen = () => {
                                                     </Link>
                                                     <Link>
                                                         <MdDelete
-                                                            onClick={() => deleteProduct(id)}
+                                                            onClick={() => deleteProductHandler(id)}
                                                             className="ms-2 me-0"
                                                             color="#FF0000"
                                                             size={20}
