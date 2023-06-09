@@ -38,7 +38,7 @@ const AddProductModal = (props) => {
             });
         }
 
-        setForm({ ...form, 'thumbnail': image });
+        setForm({ ...form, thumbnail: image });
     }
 
     const addProductHandler = () => {
