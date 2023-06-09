@@ -182,8 +182,8 @@ const deleteProduct = async (id, cb) => {
                     cancelButtonColor: swalCancelButtonColor
                 }).then(async (result) => {
                     if (result.isConfirmed) {
-                        cb(false)
                         window.location.reload();
+                        cb(false)
                     }
                 });
             } catch(err) {
