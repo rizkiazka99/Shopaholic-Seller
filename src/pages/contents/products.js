@@ -109,7 +109,7 @@ const ProductsScreen = () => {
                                                             show={showUpdateModal}
                                                             onHide={() => setShowUpdateModal(false)}
                                                             categorySelections={categorySelections}
-                                                            id={4}
+                                                            id={+id}
                                                         />
                                                     </Link>
                                                     <Link>
