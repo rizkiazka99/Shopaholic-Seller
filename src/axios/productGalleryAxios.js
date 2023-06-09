@@ -31,7 +31,7 @@ const addProductGallery = async (galleries) => {
                 Swal.fire({
                     title: 'Yay!',
                     icon: 'success',
-                    message: 'Successfully added Product picture(s)',
+                    text: 'Successfully added Product picture(s)',
                     confirmButtonColor: swalConfirmButtonColor
                 });
             }

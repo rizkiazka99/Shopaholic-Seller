@@ -18,7 +18,30 @@ const getSellerProducts = async (cb) => {
 
         cb(result.data.data);
     } catch(err) {
-        console.log(err.response)
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: err.response.status !== 500
+                ? err.response.data.message
+                : 'Server error occurred',
+            confirmButtonColor: swalConfirmButtonColor,
+            cancelButtonColor: swalCancelButtonColor
+        });
+    }
+}
+
+const getProductById = async (id, cb) => {
+    try {
+        let result = await axios({
+            method: 'GET',
+            url: baseUrl + endpoint + `/${id}`,
+            headers: {
+                access_token: localStorage.getItem('access_token')
+            }
+        });
+
+        cb(result.data.data);
+    } catch(err) {
         Swal.fire({
             icon: 'error',
             title: 'Oops!',
@@ -64,6 +87,7 @@ const addProduct = async (product) => {
             url: baseUrl + endpoint + '/add',
             data: product,
             headers: {
+                "Content-Type": "multipart/form-data",
                 access_token: localStorage.getItem('access_token')
             }
         }).then((result) => {
@@ -73,7 +97,7 @@ const addProduct = async (product) => {
                 Swal.fire({
                     title: 'Yay!',
                     icon: 'success',
-                    message: 'Successfully added your product',
+                    text: 'Successfully added your product',
                     confirmButtonColor: swalConfirmButtonColor
                 });
             }
@@ -100,6 +124,7 @@ const updateProduct = async (id, product) => {
             url: baseUrl + endpoint + `/update/${id}`,
             data: product,
             headers: {
+                "Content-Type": "multipart/form-data",
                 access_token: localStorage.getItem('access_token')
             }
         }).then(() => {
@@ -109,7 +134,7 @@ const updateProduct = async (id, product) => {
                 Swal.fire({
                     title: 'Yay!',
                     icon: 'success',
-                    message: 'Successfully updated your product',
+                    text: 'Successfully updated your product',
                     confirmButtonColor: swalConfirmButtonColor
                 });
             }
@@ -176,6 +201,7 @@ const deleteProduct = async (id) => {
 
 export { 
     getSellerProducts,
+    getProductById,
     searchProduct,
     addProduct,
     updateProduct,

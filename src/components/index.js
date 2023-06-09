@@ -5,6 +5,7 @@ import LoadingIndicator from "./loadingIndicator";
 import EmptyIndicator from "./emptyIndicator";
 import EmptySearchResult from "./emptySearchResult";
 import AddProductModal from "./addProductModal";
+import UpdateProductModal from "./updateProductModal";
 
 export {
     AuthComponents,
@@ -13,5 +14,6 @@ export {
     LoadingIndicator,
     EmptyIndicator,
     EmptySearchResult,
-    AddProductModal
+    AddProductModal,
+    UpdateProductModal
 }

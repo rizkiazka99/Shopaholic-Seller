@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { getProductById, updateProduct } from '../axios/productAxios';
 import { Modal } from "react-bootstrap";
-import { addProduct } from "../axios/productAxios";
-import { addProductGallery } from "../axios/productGalleryAxios";
-import { useNavigate } from "react-router-dom";
-import validInputs from "../helpers/validInputsForNumericForm";
+import Swal from 'sweetalert2';
+import { swalConfirmButtonColor, swalCancelButtonColor } from '../helpers/commonVariables';
+import Skeleton from 'react-loading-skeleton';
 import ReactLoading from 'react-loading';
-import Swal from "sweetalert2";
-import { swalConfirmButtonColor, swalCancelButtonColor } from "../helpers/commonVariables";
+import validInputs from '../helpers/validInputsForNumericForm';
 
-const AddProductModal = (props) => {
+const UpdateProductModal = (props) => {
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         name: '',
@@ -18,6 +17,14 @@ const AddProductModal = (props) => {
         CategoryId: 0,
         thumbnail: null
     });
+
+    useEffect(() => {
+        setLoading(true);
+        getProductById(props.id, (result) => {
+            setForm({ ...result });
+            setLoading(false);
+        })
+    }, [props.id])
 
     const uploadHandler = (image) => {
         const imgExt = ["image/png", "image/jpg", "image/jpeg"];
@@ -38,10 +45,10 @@ const AddProductModal = (props) => {
             });
         }
 
-        setForm({ ...form, 'thumbnail': image });
+        setForm({ ...form, thumbnail: image });
     }
 
-    const addProductHandler = () => {
+    const updateProductHandler = () => {
         if (form.name === '' && form.buy_price === 0 && form.sell_price === 0 && form.stock === 0 && form.CategoryId === 0) {
             Swal.fire({
                 title: 'Oops!',
@@ -92,13 +99,16 @@ const AddProductModal = (props) => {
             });
         } else {
             setLoading(true);
-            addProduct(form).then(() => {
+            if (typeof form.thumbnail === 'string') {
+                delete form.thumbnail;
+            }
+            updateProduct(props.id, form).then(() => {
                 setLoading(false);
                 window.location.reload();
             });
         }
     }
-    
+
     return(
         <>
             <Modal
@@ -118,7 +128,7 @@ const AddProductModal = (props) => {
 
                 <Modal.Body>
                     <div className='container'>
-                        <div className="form-floating mb-3">
+                        { !loading ? <div className="form-floating mb-3">
                             <input
                                 onChange={(e) => {
                                     setForm({
@@ -126,6 +136,7 @@ const AddProductModal = (props) => {
                                         name: e.target.value
                                     })
                                 }}
+                                value={form.name}
                                 required
                                 type="text"
                                 className="form-control"
@@ -133,11 +144,11 @@ const AddProductModal = (props) => {
                                 placeholder='name@example.com'
                             />
                             <label for="floatingInput">Name</label>
-                        </div>
+                        </div> : <Skeleton height={34}></Skeleton> }
                     </div>
 
                     <div className='container'>
-                        <div className="form-floating mb-3">
+                        { !loading ? <div className="form-floating mb-3">
                             <input
                                 onKeyDown={(e) => {
                                     if (!validInputs.includes(e.key)) {
@@ -150,6 +161,7 @@ const AddProductModal = (props) => {
                                         buy_price: +e.target.value
                                     })
                                 }}
+                                value={form.buy_price}
                                 required
                                 type="text"
                                 className="form-control"
@@ -157,11 +169,11 @@ const AddProductModal = (props) => {
                                 placeholder='0'
                             />
                             <label for="floatingInput">Buy Price</label>
-                        </div>
+                        </div> : <Skeleton height={34}></Skeleton> }
                     </div>
 
                     <div className='container'>
-                        <div className="form-floating mb-3">
+                        { !loading ? <div className="form-floating mb-3">
                             <input
                                 onKeyDown={(e) => {
                                     if (!validInputs.includes(e.key)) {
@@ -174,6 +186,7 @@ const AddProductModal = (props) => {
                                         sell_price: +e.target.value
                                     })
                                 }}
+                                value={form.sell_price}
                                 required
                                 type="text"
                                 className="form-control"
@@ -181,11 +194,11 @@ const AddProductModal = (props) => {
                                 placeholder='0'
                             />
                             <label for="floatingInput">Sell Price</label>
-                        </div>
+                        </div>  : <Skeleton height={34}></Skeleton> }
                     </div>
 
                     <div className='container'>
-                        <div className="form-floating mb-3">
+                        { !loading ? <div className="form-floating mb-3">
                             <input
                                 onChange={(e) => {
                                     setForm({
@@ -193,6 +206,7 @@ const AddProductModal = (props) => {
                                         stock: +e.target.value
                                     })
                                 }}
+                                value={form.stock}
                                 required
                                 type="number"
                                 className="form-control"
@@ -200,17 +214,20 @@ const AddProductModal = (props) => {
                                 placeholder='0'
                             />
                             <label for="floatingInput">Stock</label>
-                        </div>
+                        </div> : <Skeleton height={34}></Skeleton> }
                     </div>
 
                     <div className="container">
-                        <div className="form-floating mb-3">
+                        { !loading ? <div className="form-floating mb-3">
                             <select
                                 onChange={(e) => setForm({ ...form, CategoryId: +e.target.value})}
                                 class="form-select" 
                                 aria-label="Default select example" 
                                 id="floatingInput">
-                            <option value={0} selected>Product Category</option>
+                            <option value={form.CategoryId} selected>{ 
+                                form.CategoryId === 1 ? 'Graphics Card'
+                                    : 'Processors'
+                            }</option>
                             {
                                 props.categorySelections.map((category) => {
                                     const { value, label } = category;
@@ -221,11 +238,11 @@ const AddProductModal = (props) => {
                             }
                             </select>
                             <label for="floatingInput">Category</label>
-                        </div>
+                        </div> : <Skeleton height={34}></Skeleton> }
                     </div>
 
                     <div className="container">
-                        <div className="form-floating mb-3">
+                        { !loading ? <div className="form-floating mb-3">
                             <input
                                 onChange={(e) => {
                                     uploadHandler(e.target.files[0]);
@@ -237,13 +254,13 @@ const AddProductModal = (props) => {
                                 className="form-control"
                             />
                             <label for="floatingInput">Product Thumbnail - Optional</label>
-                        </div>
+                        </div>  : <Skeleton height={34}></Skeleton> }
                     </div>
                 </Modal.Body>
 
                 <Modal.Footer>
                         {!loading ? <input
-                            onClick={() => addProductHandler()}
+                            onClick={() => updateProductHandler()}
                             className='auth-btn text-white btn main-color'
                             type='submit'
                             value='Add Product'
@@ -262,4 +279,4 @@ const AddProductModal = (props) => {
     );
 }
 
-export default AddProductModal;
+export default UpdateProductModal
