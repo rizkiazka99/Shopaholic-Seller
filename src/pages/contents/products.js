@@ -3,7 +3,7 @@ import { deleteProduct, getSellerProducts, searchProduct } from "../../axios/pro
 import getCategories from "../../axios/categoryAxios"
 import './contents.css';
 import { AddProductModal, EmptyIndicator, EmptySearchResult, LoadingIndicator, UpdateProductModal } from "../../components";
-import { MdModeEditOutline, MdDelete, MdVisibility } from 'react-icons/md';
+import { MdModeEditOutline, MdDelete } from 'react-icons/md';
 import { Link } from "react-router-dom";
 import { baseApiUrl } from "../../helpers/commonVariables";
 
@@ -15,6 +15,7 @@ const ProductsScreen = () => {
     const [query, setQuery] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
+    const [productId, setProductId] = useState(0);
 
     useEffect(() => {
         setLoading(true);
@@ -94,6 +95,7 @@ const ProductsScreen = () => {
                                                         : baseApiUrl + thumbnail
                                                 }
                                                 className="card-img-top"
+                                                alt="#"
                                             />
                                             <div className="card-title mt-1">
                                                 <div className="card-title-item">
@@ -102,14 +104,17 @@ const ProductsScreen = () => {
                                                 <div className="card-title-item">
                                                     <Link>
                                                         <MdModeEditOutline
-                                                            onClick={() => setShowUpdateModal(true)}
+                                                            onClick={() => {
+                                                                setProductId(id);
+                                                                setShowUpdateModal(true)
+                                                            }}
                                                             size={20}
                                                         />
                                                         <UpdateProductModal
                                                             show={showUpdateModal}
                                                             onHide={() => setShowUpdateModal(false)}
                                                             categorySelections={categorySelections}
-                                                            id={+id}
+                                                            id={productId}
                                                         />
                                                     </Link>
                                                     <Link>

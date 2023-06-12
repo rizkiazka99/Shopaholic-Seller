@@ -17,13 +17,19 @@ const UpdateProductModal = (props) => {
         CategoryId: 0,
         thumbnail: null
     });
+    const [selectedCategory, setSelectedCategory] = useState('');
 
     useEffect(() => {
         setLoading(true);
-        getProductById(props.id, (result) => {
-            setForm({ ...result });
+        if (props.id === 0) {
             setLoading(false);
-        })
+        } else {
+            getProductById(props.id, (result) => {
+                setForm({ ...result });
+                setSelectedCategory(result.Category.name);
+                setLoading(false);
+            });
+        }
     }, [props.id])
 
     const uploadHandler = (image) => {
@@ -35,6 +41,10 @@ const UpdateProductModal = (props) => {
                 title: 'Oops!',
                 text: 'Only images with .jpg/.jpeg and .png are allowed',
                 confirmButtonColor: swalConfirmButtonColor
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    setForm({ ...form, thumbnail: form.thumbnail })
+                }
             });
         } else if (image.size > 100000) {
             Swal.fire({
@@ -42,10 +52,14 @@ const UpdateProductModal = (props) => {
                 title: 'Oops!',
                 text: 'The maximum allowed image file size is 100 KB',
                 confirmButtonColor: swalConfirmButtonColor
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    setForm({ ...form, thumbnail: form.thumbnail })
+                }
             });
+        } else {
+            setForm({ ...form, thumbnail: image });
         }
-
-        setForm({ ...form, thumbnail: image });
     }
 
     const updateProductHandler = () => {
@@ -99,9 +113,6 @@ const UpdateProductModal = (props) => {
             });
         } else {
             setLoading(true);
-            if (typeof form.thumbnail === 'string') {
-                delete form.thumbnail;
-            }
             updateProduct(props.id, form).then(() => {
                 setLoading(false);
                 window.location.reload();
@@ -122,7 +133,7 @@ const UpdateProductModal = (props) => {
                         id="contained-modal-title-vcenter"
                         className='heading'
                     >
-                        Add Product
+                        Update Product
                     </Modal.Title>
                 </Modal.Header>
 
@@ -224,16 +235,14 @@ const UpdateProductModal = (props) => {
                                 class="form-select" 
                                 aria-label="Default select example" 
                                 id="floatingInput">
-                            <option value={form.CategoryId} selected>{ 
-                                form.CategoryId === 1 ? 'Graphics Card'
-                                    : 'Processors'
-                            }</option>
+                            <option value={form.CategoryId} selected>{selectedCategory}</option>
                             {
                                 props.categorySelections.map((category) => {
                                     const { value, label } = category;
                                     return(
-                                        <option value={value}>{label}</option>
-                                    )
+                                        category.label !== selectedCategory ? <option value={value}>{label}</option>
+                                            : <></>
+                                    );
                                 })
                             }
                             </select>
@@ -263,7 +272,7 @@ const UpdateProductModal = (props) => {
                             onClick={() => updateProductHandler()}
                             className='auth-btn text-white btn main-color'
                             type='submit'
-                            value='Add Product'
+                            value='Update Product'
                         /> : <div className="auth-btn btn main-color">
                             <ReactLoading
                                 type='cylon'

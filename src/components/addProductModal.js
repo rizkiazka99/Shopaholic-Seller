@@ -28,6 +28,10 @@ const AddProductModal = (props) => {
                 title: 'Oops!',
                 text: 'Only images with .jpg/.jpeg and .png are allowed',
                 confirmButtonColor: swalConfirmButtonColor
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    setForm({ ...form, thumbnail: null })
+                }
             });
         } else if (image.size > 100000) {
             Swal.fire({
@@ -35,10 +39,14 @@ const AddProductModal = (props) => {
                 title: 'Oops!',
                 text: 'The maximum allowed image file size is 100 KB',
                 confirmButtonColor: swalConfirmButtonColor
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    setForm({ ...form, thumbnail: null })
+                }
             });
+        } else {
+            setForm({ ...form, thumbnail: image });
         }
-
-        setForm({ ...form, thumbnail: image });
     }
 
     const addProductHandler = () => {
@@ -229,7 +237,6 @@ const AddProductModal = (props) => {
                             <input
                                 onChange={(e) => {
                                     uploadHandler(e.target.files[0]);
-                                    console.log(form.thumbnail)
                                 }}
                                 placeholder="Product Thumbnail"
                                 type='file'

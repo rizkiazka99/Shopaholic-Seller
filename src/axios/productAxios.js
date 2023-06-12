@@ -127,7 +127,7 @@ const updateProduct = async (id, product) => {
                 "Content-Type": "multipart/form-data",
                 access_token: localStorage.getItem('access_token')
             }
-        }).then(() => {
+        }).then((result) => {
             isLoading = false;
 
             if (!isLoading) {
